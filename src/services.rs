@@ -1,13 +1,18 @@
-use rust_decimal::Decimal;
 use crate::models::{Asset, AssetView};
+use rust_decimal::Decimal;
 
 pub fn to_view(asset: Asset) -> AssetView {
     let invested = asset.quantity * asset.average_price;
     let current_value = asset.quantity * asset.current_price;
     let profit_loss = current_value - invested;
-    let return_percent = if invested.is_zero() { Decimal::ZERO } else { (profit_loss / invested) * Decimal::from(100) };
+    let return_percent = if invested.is_zero() {
+        Decimal::ZERO
+    } else {
+        (profit_loss / invested) * Decimal::from(100)
+    };
 
     AssetView {
+        id: asset.id,
         symbol: asset.symbol,
         name: asset.name,
         asset_type: asset.asset_type,
