@@ -1,6 +1,6 @@
 [package]
 name = "fintrack-rust"
-version = "1.0.1"
+version = "0.5.0"
 edition = "2021"
 description = "Aplicacao fullstack em Rust para gestao e analise de carteira de investimentos."
 
