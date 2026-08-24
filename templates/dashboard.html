@@ -18,7 +18,7 @@
         <a href="#goals">Metas</a>
       </nav>
       <form method="post" action="/logout"><button type="submit">Sair</button></form>
-      <div class="sidebar-footer">Futuristic Finance • v0.7.0</div>
+      <div class="sidebar-footer">Futuristic Finance • v1.0.0</div>
     </aside>
 
     <main>
@@ -27,7 +27,7 @@
       <section id="overview" class="metrics">
         <article class="metric-card gold"><span>Patrimônio atual</span><strong>R$ {{ current }}</strong></article>
         <article class="metric-card"><span>Total investido</span><strong>R$ {{ invested }}</strong></article>
-        <article class="metric-card"><span>Resultado</span><strong class="{% if profit >= 0 %}positive{% else %}negative{% endif %}">R$ {{ profit }}</strong></article>
+        <article class="metric-card"><span>Resultado</span><strong class="{% if profit.is_sign_negative() %}negative{% else %}positive{% endif %}">R$ {{ profit }}</strong></article>
         <article class="metric-card"><span>Ativos</span><strong>{{ assets.len() }}</strong></article>
       </section>
 
@@ -35,7 +35,7 @@
         <article class="panel" id="assets"><div class="panel-head"><div><p class="eyebrow">CARTEIRA</p><h2>Ativos cadastrados</h2></div></div>
           {% if assets.len() == 0 %}<div class="empty-state">Nenhum ativo cadastrado ainda.</div>{% else %}
           <div class="table-wrap"><table><thead><tr><th>Ativo</th><th>Categoria</th><th>Qtd.</th><th>Preço médio</th><th>Atual</th><th>Resultado</th></tr></thead><tbody>
-          {% for asset in assets %}<tr><td><strong>{{ asset.symbol }}</strong><span>{{ asset.name }}</span></td><td>{{ asset.asset_type }}</td><td>{{ asset.quantity }}</td><td>R$ {{ asset.average_price }}</td><td>R$ {{ asset.current_price }}</td><td class="{% if asset.profit_loss >= 0 %}positive{% else %}negative{% endif %}">R$ {{ asset.profit_loss }}<span>{{ asset.return_percent }}%</span></td></tr>{% endfor %}
+          {% for asset in assets %}<tr><td><strong>{{ asset.symbol }}</strong><span>{{ asset.name }}</span></td><td>{{ asset.asset_type }}</td><td>{{ asset.quantity }}</td><td>R$ {{ asset.average_price }}</td><td>R$ {{ asset.current_price }}</td><td class="{% if asset.profit_loss.is_sign_negative() %}negative{% else %}positive{% endif %}">R$ {{ asset.profit_loss }}<span>{{ asset.return_percent }}%</span></td></tr>{% endfor %}
           </tbody></table></div>{% endif %}
         </article>
 
@@ -60,7 +60,7 @@
 
         <article class="panel" id="goals"><p class="eyebrow">METAS DE ALOCAÇÃO</p><h2>Planejado x atual</h2>
           <form method="post" action="/goals" class="asset-form"><label>Categoria<select name="asset_type"><option>Ações</option><option>FIIs</option><option>ETFs</option><option>Renda Fixa</option><option>Cripto</option><option>Outros</option></select></label><label>Meta (%)<input name="target_percent" type="number" min="0" max="100" step="0.01" required /></label><button type="submit">Salvar meta</button></form>
-          {% if goals.len() == 0 %}<div class="empty-state">Nenhuma meta cadastrada.</div>{% else %}<div class="list">{% for goal in goals %}<div class="row"><div><div class="title">{{ goal.asset_type }}</div><div class="meta">Atual {{ goal.current_percent }}% • Meta {{ goal.target_percent }}%</div></div><div class="{% if goal.difference > 0 %}positive{% else %}negative{% endif %}">{{ goal.difference }}%</div></div>{% endfor %}</div>{% endif %}
+          {% if goals.len() == 0 %}<div class="empty-state">Nenhuma meta cadastrada.</div>{% else %}<div class="list">{% for goal in goals %}<div class="row"><div><div class="title">{{ goal.asset_type }}</div><div class="meta">Atual {{ goal.current_percent }}% • Meta {{ goal.target_percent }}%</div></div><div class="{% if goal.difference.is_sign_negative() %}negative{% else %}positive{% endif %}">{{ goal.difference }}%</div></div>{% endfor %}</div>{% endif %}
         </article>
       </section>
     </main>
