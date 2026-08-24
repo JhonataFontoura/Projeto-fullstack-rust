@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Criar conta • FinTrack Rust</title>
+  <link rel="stylesheet" href="/static/auth.css" />
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="brand-panel">
+      <div class="brand">FINTRACK <span>RUST</span></div>
+      <p class="eyebrow">FUTURISTIC FINANCE</p>
+      <h1>Comece a acompanhar sua carteira.</h1>
+      <p>Crie sua conta para manter ativos, patrimônio e metas separados por usuário.</p>
+      <div class="orb"></div>
+    </section>
+    <section class="form-panel">
+      <div class="card">
+        <p class="eyebrow">NOVA CONTA</p>
+        <h2>Cadastrar</h2>
+        <form method="post" action="/register">
+          <label>Nome<input type="text" name="name" autocomplete="name" minlength="2" required /></label>
+          <label>E-mail<input type="email" name="email" autocomplete="email" required /></label>
+          <label>Senha<input type="password" name="password" autocomplete="new-password" minlength="8" required /></label>
+          <button type="submit">Criar conta</button>
+        </form>
+        <p class="switch">Já tem conta? <a href="/login">Entrar</a></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

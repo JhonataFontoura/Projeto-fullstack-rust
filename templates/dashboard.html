@@ -17,7 +17,8 @@
         <a href="#goals">Metas</a>
         <a href="#reports">Relatórios</a>
       </nav>
-      <div class="sidebar-footer">Futuristic Finance</div>
+      <form method="post" action="/logout"><button type="submit">Sair</button></form>
+      <div class="sidebar-footer">Futuristic Finance • v1.0.1</div>
     </aside>
 
     <main>
@@ -27,7 +28,7 @@
           <h1>Seu patrimônio, mais claro.</h1>
           <p class="sub">Acompanhe sua carteira, concentração e resultado em um único painel.</p>
         </div>
-        <div class="status-pill">● PostgreSQL conectado</div>
+        <div class="status-pill">● Sessão protegida</div>
       </header>
 
       <section id="overview" class="metrics">
@@ -81,18 +82,18 @@
         <article class="panel">
           <p class="eyebrow">INTELIGÊNCIA DE CARTEIRA</p>
           <h2>Distribuição e metas</h2>
-          <p class="sub">A base para metas de alocação e análise por categoria já está preparada no banco.</p>
+          <p class="sub">A base para metas de alocação e análise por categoria está preparada no banco.</p>
           <div class="allocation-placeholder"><div style="width:48%"></div><div style="width:22%"></div><div style="width:20%"></div><div style="width:10%"></div></div>
           <div class="legend"><span>Ações</span><span>FIIs</span><span>Renda Fixa</span><span>Cripto</span></div>
         </article>
         <article class="panel" id="reports">
-          <p class="eyebrow">PORTFÓLIO</p>
-          <h2>Próximos passos</h2>
+          <p class="eyebrow">SEGURANÇA E QUALIDADE</p>
+          <h2>Fundação consolidada</h2>
           <ul class="checklist">
-            <li>Autenticação com JWT + cookies</li>
-            <li>Movimentações de compra e venda</li>
-            <li>Metas de alocação por classe</li>
-            <li>Testes de integração com PostgreSQL</li>
+            <li>Cadastro e login com senha protegida por Argon2</li>
+            <li>Sessão JWT mantida em cookie HttpOnly</li>
+            <li>Carteira isolada por pessoa usuária</li>
+            <li>Rotas de ativos protegidas pela sessão</li>
           </ul>
         </article>
       </section>
