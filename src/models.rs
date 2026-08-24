@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
+use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, sqlx::FromRow)]
@@ -26,6 +27,7 @@ pub struct AssetForm {
 
 #[derive(Debug, Serialize)]
 pub struct AssetView {
+    pub id: Uuid,
     pub symbol: String,
     pub name: String,
     pub asset_type: String,
@@ -36,4 +38,22 @@ pub struct AssetView {
     pub current_value: Decimal,
     pub profit_loss: Decimal,
     pub return_percent: Decimal,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TransactionForm {
+    pub asset_id: Uuid,
+    pub transaction_type: String,
+    pub quantity: Decimal,
+    pub unit_price: Decimal,
+}
+
+#[derive(Debug, Serialize, sqlx::FromRow)]
+pub struct TransactionView {
+    pub id: Uuid,
+    pub symbol: String,
+    pub transaction_type: String,
+    pub quantity: Decimal,
+    pub unit_price: Decimal,
+    pub occurred_at: DateTime<Utc>,
 }
