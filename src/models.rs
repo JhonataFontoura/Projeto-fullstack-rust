@@ -57,3 +57,15 @@ pub struct TransactionView {
     pub unit_price: Decimal,
     pub occurred_at: DateTime<Utc>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct GoalForm {
+    pub asset_type: String,
+    pub target_percent: Decimal,
+}
+
+#[derive(Debug, Serialize, sqlx::FromRow)]
+pub struct AllocationGoal {
+    pub asset_type: String,
+    pub target_percent: Decimal,
+}
