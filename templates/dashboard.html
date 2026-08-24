@@ -14,19 +14,19 @@
         <a class="active" href="#overview">Dashboard</a>
         <a href="#portfolio">Carteira</a>
         <a href="#assets">Ativos</a>
+        <a href="#transactions">Movimentações</a>
         <a href="#goals">Metas</a>
-        <a href="#reports">Relatórios</a>
       </nav>
       <form method="post" action="/logout"><button type="submit">Sair</button></form>
-      <div class="sidebar-footer">Futuristic Finance • v1.0.1</div>
+      <div class="sidebar-footer">Futuristic Finance • v0.5.0</div>
     </aside>
 
     <main>
       <header class="topbar">
         <div>
-          <p class="eyebrow">VISÃO GERAL</p>
+          <p class="eyebrow">PORTFOLIO ENGINE</p>
           <h1>Seu patrimônio, mais claro.</h1>
-          <p class="sub">Acompanhe sua carteira, concentração e resultado em um único painel.</p>
+          <p class="sub">Registre compras e vendas e acompanhe o impacto de cada movimentação na carteira.</p>
         </div>
         <div class="status-pill">● Sessão protegida</div>
       </header>
@@ -78,23 +78,51 @@
         </article>
       </section>
 
+      <section class="content-grid secondary" id="transactions">
+        <article class="panel form-panel">
+          <p class="eyebrow">MOVIMENTAÇÃO</p>
+          <h2>Registrar compra ou venda</h2>
+          {% if assets.len() == 0 %}
+            <div class="empty-state">Cadastre um ativo antes de registrar movimentações.</div>
+          {% else %}
+          <form method="post" action="/transactions" class="asset-form">
+            <label>Ativo
+              <select name="asset_id" required>
+                {% for asset in assets %}<option value="{{ asset.id }}">{{ asset.symbol }} — {{ asset.name }}</option>{% endfor %}
+              </select>
+            </label>
+            <label>Tipo<select name="transaction_type"><option value="buy">Compra</option><option value="sell">Venda</option></select></label>
+            <label>Quantidade<input name="quantity" type="number" step="0.000001" min="0.000001" required /></label>
+            <label>Preço unitário<input name="unit_price" type="number" step="0.01" min="0" required /></label>
+            <button type="submit">Registrar movimentação</button>
+          </form>
+          {% endif %}
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">HISTÓRICO</p>
+          <h2>Últimas movimentações</h2>
+          {% if transactions.len() == 0 %}
+            <div class="empty-state">Nenhuma movimentação registrada.</div>
+          {% else %}
+            <div class="table-wrap"><table>
+              <thead><tr><th>Ativo</th><th>Tipo</th><th>Qtd.</th><th>Preço</th><th>Data</th></tr></thead>
+              <tbody>{% for tx in transactions %}<tr><td><strong>{{ tx.symbol }}</strong></td><td>{{ tx.transaction_type }}</td><td>{{ tx.quantity }}</td><td>R$ {{ tx.unit_price }}</td><td>{{ tx.occurred_at }}</td></tr>{% endfor %}</tbody>
+            </table></div>
+          {% endif %}
+        </article>
+      </section>
+
       <section class="content-grid secondary" id="goals">
         <article class="panel">
-          <p class="eyebrow">INTELIGÊNCIA DE CARTEIRA</p>
-          <h2>Distribuição e metas</h2>
-          <p class="sub">A base para metas de alocação e análise por categoria está preparada no banco.</p>
-          <div class="allocation-placeholder"><div style="width:48%"></div><div style="width:22%"></div><div style="width:20%"></div><div style="width:10%"></div></div>
-          <div class="legend"><span>Ações</span><span>FIIs</span><span>Renda Fixa</span><span>Cripto</span></div>
+          <p class="eyebrow">PRÓXIMA FASE</p>
+          <h2>Analytics e metas</h2>
+          <p class="sub">A v0.7.0 vai transformar os dados das movimentações em distribuição real, metas e indicadores.</p>
         </article>
-        <article class="panel" id="reports">
-          <p class="eyebrow">SEGURANÇA E QUALIDADE</p>
-          <h2>Fundação consolidada</h2>
-          <ul class="checklist">
-            <li>Cadastro e login com senha protegida por Argon2</li>
-            <li>Sessão JWT mantida em cookie HttpOnly</li>
-            <li>Carteira isolada por pessoa usuária</li>
-            <li>Rotas de ativos protegidas pela sessão</li>
-          </ul>
+        <article class="panel">
+          <p class="eyebrow">REGRAS DO MOTOR</p>
+          <h2>Consistência financeira</h2>
+          <ul class="checklist"><li>Compra recalcula preço médio</li><li>Venda reduz quantidade sem alterar custo médio remanescente</li><li>Venda acima da posição é bloqueada</li><li>Movimentação e atualização do ativo ocorrem na mesma transação SQL</li></ul>
         </article>
       </section>
     </main>
