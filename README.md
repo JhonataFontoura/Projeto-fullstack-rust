@@ -1,10 +1,22 @@
 # FinTrack Rust
 
-FinTrack Rust é uma aplicação web fullstack para gestão inteligente de carteiras de investimentos. Permite cadastrar ativos e movimentações, acompanhar patrimônio, rentabilidade, distribuição e metas de alocação. Desenvolvida em Rust com Axum, PostgreSQL, SQLx, Askama, JWT e Docker, com foco em segurança e organização.
+FinTrack Rust é uma aplicação web fullstack para gestão inteligente de carteiras de investimentos. Permite cadastrar ativos e movimentações, acompanhar patrimônio, rentabilidade, distribuição e metas de alocação. Desenvolvida em Rust com Axum, PostgreSQL, SQLx, Askama, JWT e Docker, com foco em segurança, organização e clareza visual.
 
-## Visão do projeto
+## O que o projeto faz
 
-O objetivo é evoluir do CRUD básico para uma experiência de portfólio mais completa, com regras financeiras, autenticação, histórico de movimentações, metas de alocação, testes e uma interface Futuristic Finance em preto, azul e dourado.
+- cadastro e autenticação de pessoas usuárias;
+- sessão com JWT armazenada em cookie HttpOnly;
+- senhas protegidas com Argon2;
+- cadastro, edição e remoção de ativos;
+- registro de compras e vendas;
+- recálculo automático de quantidade e preço médio;
+- bloqueio de venda acima da posição disponível;
+- histórico de movimentações;
+- cálculo de patrimônio, valor investido, lucro/prejuízo e rentabilidade;
+- distribuição da carteira por categoria;
+- metas de alocação com comparação entre planejado e atual;
+- API local para ativos e analytics;
+- dashboard responsivo com identidade Futuristic Finance em preto, azul e dourado.
 
 ## Tecnologias
 
@@ -15,86 +27,111 @@ O objetivo é evoluir do CRUD básico para uma experiência de portfólio mais c
 - SQLx
 - Askama
 - JWT + cookies
+- Argon2
 - Docker
 - HTML + CSS
+- GitHub Actions
 
-## Roadmap de evolução
-
-- v0.1.0 — Foundation: Cargo, Axum, health check e estrutura inicial.
-- v0.2.0 — Database: PostgreSQL, Docker, SQLx e migrations.
-- v0.3.0 — Assets Core: criação, listagem e atualização de ativos.
-- v0.4.0 — Authentication: usuários, JWT, cookies e rotas protegidas.
-- v0.5.0 — Portfolio Engine: compras, vendas, preço médio e patrimônio.
-- v0.6.0 — Futuristic Finance UI: dashboard Askama, preto + azul + dourado.
-- v0.7.0 — Portfolio Intelligence: rentabilidade, distribuição e metas.
-- v0.8.0 — Quality: validações, erros e testes.
-- v0.9.0 — Product Polish: UX, responsividade e documentação.
-- v1.0.0 — Release final do desafio.
-
-## Estrutura
+## Arquitetura
 
 ```text
-src/
-├── main.rs
-├── config/
-├── models.rs
-├── services.rs
-├── routes/
-├── handlers/
-├── repositories/
-├── auth/
-└── errors/
-
-templates/
-static/
-migrations/
-tests/
-docker-compose.yml
-Cargo.toml
+Browser
+  ↓
+Axum
+  ↓
+Autenticação / Handlers
+  ↓
+Portfolio Engine + Analytics
+  ↓
+SQLx
+  ↓
+PostgreSQL
 ```
+
+Mais detalhes em `docs/ARCHITECTURE.md`.
+
+## Evolução
+
+- `v0.1.0` — Foundation: Cargo, Axum, health check e estrutura inicial.
+- `v0.2.0` — Database: PostgreSQL, Docker, SQLx e migrations.
+- `v0.3.0` — Assets Core: CRUD de ativos.
+- `v0.4.0` — Authentication: usuários, JWT, cookies e Argon2.
+- `v0.5.0` — Portfolio Engine: compras, vendas, preço médio e histórico.
+- `v0.6.0` — Dashboard: Askama + Futuristic Finance.
+- `v0.7.0` — Analytics: distribuição e metas de alocação.
+- `v0.8.0` — Quality: testes automatizados e CI.
+- `v0.9.0` — Product Polish: UX, responsividade, acessibilidade e documentação.
+- `v1.0.0` — versão final para entrega.
+
+Cada etapa principal foi separada em branch própria para tornar a evolução do projeto fácil de acompanhar no GitHub.
 
 ## Como executar
 
-1. Copie as variáveis de ambiente:
+### 1. Clone o projeto
+
+```powershell
+git clone https://github.com/JhonataFontoura/Projeto-fullstack-rust.git
+cd Projeto-fullstack-rust
+git switch v1.0.0-final
+```
+
+### 2. Crie o arquivo de ambiente
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-2. Suba o PostgreSQL:
+Troque o valor de `JWT_SECRET` por um segredo local forte.
+
+### 3. Inicie o PostgreSQL
 
 ```powershell
 docker compose up -d
 ```
 
-3. Execute a aplicação:
+### 4. Execute a aplicação
 
 ```powershell
 cargo run
 ```
 
-4. Abra:
+Acesse:
 
 ```text
 http://127.0.0.1:3000
 ```
 
-## Testes
+## Como testar
 
 ```powershell
-cargo test
+cargo fmt --all -- --check
+cargo clippy --all-targets --all-features -- -D warnings
+cargo test --all
 ```
 
-## Melhorias implementadas
+A branch também possui workflow de CI no GitHub Actions para executar essas verificações automaticamente.
 
-- dashboard de portfólio;
-- cálculo de total investido, patrimônio e resultado;
-- categorias de ativos;
-- base para metas de alocação;
-- persistência em PostgreSQL;
-- interface responsiva com identidade visual Futuristic Finance;
-- validação de dados e tratamento de erros.
+## Melhorias implementadas em relação ao projeto base
 
-## Aprendizados
+O projeto deixou de ser apenas um CRUD de ativos e passou a possuir autenticação, isolamento de carteira por usuário, regras reais de compra e venda, histórico de movimentações, analytics, metas de alocação, testes automatizados e uma identidade visual própria.
 
-O projeto exercita organização modular em Rust, Axum, SQLx, PostgreSQL, Docker, templates Askama, regras de negócio financeiras, serialização, tratamento de erros e desenvolvimento fullstack.
+## Design
+
+A interface segue o conceito **Futuristic Finance**:
+
+- fundo preto e azul profundo;
+- azul tecnológico para ações e interação;
+- dourado para patrimônio e informações de destaque;
+- verde para ganhos;
+- vermelho para perdas;
+- cards com hierarquia clara;
+- responsividade para desktop e dispositivos menores;
+- estados vazios, foco visível e suporte a `prefers-reduced-motion`.
+
+## O que aprendi
+
+Durante o desafio foram praticados organização modular em Rust, ownership aplicado a regras de negócio, `Result`, validação, programação assíncrona com Tokio, rotas com Axum, SQLx e PostgreSQL, migrations, autenticação, cookies, JWT, hashing de senha, templates Askama, Docker, testes e integração contínua.
+
+## Aviso
+
+O FinTrack é um projeto educacional de acompanhamento de carteira. As metas de alocação são definidas pela própria pessoa usuária e não constituem recomendação de investimento.
