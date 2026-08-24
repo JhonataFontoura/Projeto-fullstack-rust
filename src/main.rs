@@ -15,13 +15,14 @@ use std::net::SocketAddr;
 use tower_http::services::ServeDir;
 use uuid::Uuid;
 
+mod analytics;
 mod auth;
 mod config;
 mod models;
 mod portfolio;
 mod services;
 
-use models::{Asset, AssetForm, AssetView, TransactionForm, TransactionView};
+use models::{AllocationGoal, Asset, AssetForm, AssetView, GoalForm, TransactionForm, TransactionView};
 
 #[derive(Clone)]
 struct AppState { pool: PgPool, jwt_secret: String }
@@ -31,6 +32,8 @@ struct AppState { pool: PgPool, jwt_secret: String }
 struct DashboardTemplate {
     assets: Vec<AssetView>,
     transactions: Vec<TransactionView>,
+    allocations: Vec<analytics::AllocationMetric>,
+    goals: Vec<analytics::GoalMetric>,
     invested: Decimal,
     current: Decimal,
     profit: Decimal,
@@ -66,7 +69,9 @@ async fn main() {
         .route("/assets/{id}/edit", post(update_asset))
         .route("/assets/{id}/delete", post(delete_asset))
         .route("/transactions", post(create_transaction))
+        .route("/goals", post(upsert_goal))
         .route("/api/assets", get(api_assets))
+        .route("/api/analytics", get(api_analytics))
         .nest_service("/static", ServeDir::new("static"))
         .with_state(state);
     let addr = SocketAddr::from(([127,0,0,1],3000));
@@ -75,7 +80,7 @@ async fn main() {
     axum::serve(listener, app).await.expect("server error");
 }
 
-async fn health() -> Json<Value> { Json(json!({"status":"ok","service":"fintrack-rust","version":"0.5.0"})) }
+async fn health() -> Json<Value> { Json(json!({"status":"ok","service":"fintrack-rust","version":"0.7.0"})) }
 async fn login_page() -> Result<Html<String>, AppError> { Ok(Html(LoginTemplate.render().map_err(|e| AppError::Template(e.to_string()))?)) }
 async fn register_page() -> Result<Html<String>, AppError> { Ok(Html(RegisterTemplate.render().map_err(|e| AppError::Template(e.to_string()))?)) }
 
@@ -108,14 +113,28 @@ async fn dashboard(State(state): State<AppState>, jar: CookieJar) -> Result<Resp
     let assets: Vec<AssetView> = rows.into_iter().map(services::to_view).collect();
     let transactions = sqlx::query_as::<_, TransactionView>("SELECT t.id,a.symbol,t.transaction_type,t.quantity,t.unit_price,t.occurred_at FROM transactions t JOIN assets a ON a.id=t.asset_id WHERE t.user_id=$1 ORDER BY t.occurred_at DESC LIMIT 10")
         .bind(user_id).fetch_all(&state.pool).await?;
+    let goal_rows = sqlx::query_as::<_, AllocationGoal>("SELECT asset_type,target_percent FROM allocation_goals WHERE user_id=$1 ORDER BY asset_type")
+        .bind(user_id).fetch_all(&state.pool).await?;
+    let allocations = analytics::allocation_by_type(&assets);
+    let goal_pairs: Vec<(String,Decimal)> = goal_rows.into_iter().map(|g|(g.asset_type,g.target_percent)).collect();
+    let goals = analytics::compare_goals(&allocations,&goal_pairs);
     let (invested,current,profit)=services::portfolio_totals(&assets);
-    let body = DashboardTemplate{assets,transactions,invested,current,profit}.render().map_err(|e|AppError::Template(e.to_string()))?;
+    let body = DashboardTemplate{assets,transactions,allocations,goals,invested,current,profit}.render().map_err(|e|AppError::Template(e.to_string()))?;
     Ok(Html(body).into_response())
 }
 
 async fn api_assets(State(state): State<AppState>, jar: CookieJar) -> Result<Json<Vec<Asset>>, AppError> {
     let user_id=require_user(&jar,&state)?;
     Ok(Json(sqlx::query_as::<_,Asset>("SELECT id,user_id,symbol,name,asset_type,quantity,average_price,current_price FROM assets WHERE user_id=$1 ORDER BY created_at DESC").bind(user_id).fetch_all(&state.pool).await?))
+}
+
+async fn api_analytics(State(state): State<AppState>, jar: CookieJar) -> Result<Json<Value>, AppError> {
+    let user_id=require_user(&jar,&state)?;
+    let rows = sqlx::query_as::<_,Asset>("SELECT id,user_id,symbol,name,asset_type,quantity,average_price,current_price FROM assets WHERE user_id=$1").bind(user_id).fetch_all(&state.pool).await?;
+    let assets: Vec<AssetView> = rows.into_iter().map(services::to_view).collect();
+    let allocations=analytics::allocation_by_type(&assets);
+    let (invested,current,profit)=services::portfolio_totals(&assets);
+    Ok(Json(json!({"invested":invested,"current":current,"profit":profit,"allocation":allocations})))
 }
 
 async fn create_asset(State(state): State<AppState>, jar: CookieJar, Form(input): Form<AssetForm>) -> Result<Redirect,AppError>{
@@ -158,6 +177,16 @@ async fn create_transaction(State(state): State<AppState>, jar: CookieJar, Form(
     sqlx::query("INSERT INTO transactions (user_id,asset_id,transaction_type,quantity,unit_price) VALUES ($1,$2,$3,$4,$5)")
         .bind(user_id).bind(input.asset_id).bind(&input.transaction_type).bind(input.quantity).bind(input.unit_price).execute(&mut *tx).await?;
     tx.commit().await?; Ok(Redirect::to("/"))
+}
+
+async fn upsert_goal(State(state): State<AppState>, jar: CookieJar, Form(input): Form<GoalForm>) -> Result<Redirect,AppError>{
+    let user_id=require_user(&jar,&state)?;
+    if input.asset_type.trim().is_empty() || input.target_percent < Decimal::ZERO || input.target_percent > Decimal::from(100) {
+        return Err(AppError::Validation("meta deve estar entre 0 e 100%".into()));
+    }
+    sqlx::query("INSERT INTO allocation_goals (user_id,asset_type,target_percent) VALUES ($1,$2,$3) ON CONFLICT(user_id,asset_type) DO UPDATE SET target_percent=EXCLUDED.target_percent,updated_at=NOW()")
+        .bind(user_id).bind(input.asset_type.trim()).bind(input.target_percent).execute(&state.pool).await?;
+    Ok(Redirect::to("/#goals"))
 }
 
 fn require_user(jar:&CookieJar,state:&AppState)->Result<Uuid,AppError>{auth::current_user_id(jar,&state.jwt_secret).ok_or_else(||AppError::Unauthorized("faça login para continuar".into()))}
