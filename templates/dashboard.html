@@ -12,24 +12,17 @@
       <div class="brand">FINTRACK <span>RUST</span></div>
       <nav>
         <a class="active" href="#overview">Dashboard</a>
-        <a href="#portfolio">Carteira</a>
         <a href="#assets">Ativos</a>
         <a href="#transactions">Movimentações</a>
+        <a href="#analytics">Analytics</a>
         <a href="#goals">Metas</a>
       </nav>
       <form method="post" action="/logout"><button type="submit">Sair</button></form>
-      <div class="sidebar-footer">Futuristic Finance • v0.5.0</div>
+      <div class="sidebar-footer">Futuristic Finance • v0.7.0</div>
     </aside>
 
     <main>
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">PORTFOLIO ENGINE</p>
-          <h1>Seu patrimônio, mais claro.</h1>
-          <p class="sub">Registre compras e vendas e acompanhe o impacto de cada movimentação na carteira.</p>
-        </div>
-        <div class="status-pill">● Sessão protegida</div>
-      </header>
+      <header class="topbar"><div><p class="eyebrow">PORTFOLIO INTELLIGENCE</p><h1>Decisões com contexto.</h1><p class="sub">Patrimônio, resultado, distribuição e metas de alocação no mesmo painel.</p></div><div class="status-pill">● Analytics ativo</div></header>
 
       <section id="overview" class="metrics">
         <article class="metric-card gold"><span>Patrimônio atual</span><strong>R$ {{ current }}</strong></article>
@@ -39,90 +32,35 @@
       </section>
 
       <section class="content-grid">
-        <article class="panel" id="assets">
-          <div class="panel-head"><div><p class="eyebrow">CARTEIRA</p><h2>Ativos cadastrados</h2></div></div>
-          {% if assets.len() == 0 %}
-            <div class="empty-state">Nenhum ativo cadastrado ainda.</div>
-          {% else %}
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Ativo</th><th>Categoria</th><th>Qtd.</th><th>Preço médio</th><th>Atual</th><th>Resultado</th></tr></thead>
-                <tbody>
-                  {% for asset in assets %}
-                  <tr>
-                    <td><strong>{{ asset.symbol }}</strong><span>{{ asset.name }}</span></td>
-                    <td>{{ asset.asset_type }}</td>
-                    <td>{{ asset.quantity }}</td>
-                    <td>R$ {{ asset.average_price }}</td>
-                    <td>R$ {{ asset.current_price }}</td>
-                    <td class="{% if asset.profit_loss >= 0 %}positive{% else %}negative{% endif %}">R$ {{ asset.profit_loss }}<span>{{ asset.return_percent }}%</span></td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          {% endif %}
+        <article class="panel" id="assets"><div class="panel-head"><div><p class="eyebrow">CARTEIRA</p><h2>Ativos cadastrados</h2></div></div>
+          {% if assets.len() == 0 %}<div class="empty-state">Nenhum ativo cadastrado ainda.</div>{% else %}
+          <div class="table-wrap"><table><thead><tr><th>Ativo</th><th>Categoria</th><th>Qtd.</th><th>Preço médio</th><th>Atual</th><th>Resultado</th></tr></thead><tbody>
+          {% for asset in assets %}<tr><td><strong>{{ asset.symbol }}</strong><span>{{ asset.name }}</span></td><td>{{ asset.asset_type }}</td><td>{{ asset.quantity }}</td><td>R$ {{ asset.average_price }}</td><td>R$ {{ asset.current_price }}</td><td class="{% if asset.profit_loss >= 0 %}positive{% else %}negative{% endif %}">R$ {{ asset.profit_loss }}<span>{{ asset.return_percent }}%</span></td></tr>{% endfor %}
+          </tbody></table></div>{% endif %}
         </article>
 
-        <article class="panel form-panel">
-          <div class="panel-head"><div><p class="eyebrow">NOVO ATIVO</p><h2>Adicionar à carteira</h2></div></div>
-          <form method="post" action="/assets" class="asset-form">
-            <label>Símbolo<input name="symbol" placeholder="PETR4" required /></label>
-            <label>Nome<input name="name" placeholder="Petrobras PN" required /></label>
-            <label>Categoria<select name="asset_type" required><option>Ações</option><option>FIIs</option><option>ETFs</option><option>Renda Fixa</option><option>Cripto</option><option>Outros</option></select></label>
-            <label>Quantidade<input name="quantity" type="number" step="0.000001" min="0" required /></label>
-            <label>Preço médio<input name="average_price" type="number" step="0.01" min="0" required /></label>
-            <label>Preço atual<input name="current_price" type="number" step="0.01" min="0" required /></label>
-            <button type="submit">Adicionar ativo</button>
-          </form>
+        <article class="panel form-panel"><div class="panel-head"><div><p class="eyebrow">NOVO ATIVO</p><h2>Adicionar à carteira</h2></div></div>
+          <form method="post" action="/assets" class="asset-form"><label>Símbolo<input name="symbol" placeholder="PETR4" required /></label><label>Nome<input name="name" placeholder="Petrobras PN" required /></label><label>Categoria<select name="asset_type" required><option>Ações</option><option>FIIs</option><option>ETFs</option><option>Renda Fixa</option><option>Cripto</option><option>Outros</option></select></label><label>Quantidade<input name="quantity" type="number" step="0.000001" min="0" required /></label><label>Preço médio<input name="average_price" type="number" step="0.01" min="0" required /></label><label>Preço atual<input name="current_price" type="number" step="0.01" min="0" required /></label><button type="submit">Adicionar ativo</button></form>
         </article>
       </section>
 
       <section class="content-grid secondary" id="transactions">
-        <article class="panel form-panel">
-          <p class="eyebrow">MOVIMENTAÇÃO</p>
-          <h2>Registrar compra ou venda</h2>
-          {% if assets.len() == 0 %}
-            <div class="empty-state">Cadastre um ativo antes de registrar movimentações.</div>
-          {% else %}
-          <form method="post" action="/transactions" class="asset-form">
-            <label>Ativo
-              <select name="asset_id" required>
-                {% for asset in assets %}<option value="{{ asset.id }}">{{ asset.symbol }} — {{ asset.name }}</option>{% endfor %}
-              </select>
-            </label>
-            <label>Tipo<select name="transaction_type"><option value="buy">Compra</option><option value="sell">Venda</option></select></label>
-            <label>Quantidade<input name="quantity" type="number" step="0.000001" min="0.000001" required /></label>
-            <label>Preço unitário<input name="unit_price" type="number" step="0.01" min="0" required /></label>
-            <button type="submit">Registrar movimentação</button>
-          </form>
-          {% endif %}
+        <article class="panel form-panel"><p class="eyebrow">MOVIMENTAÇÃO</p><h2>Registrar compra ou venda</h2>
+          {% if assets.len() == 0 %}<div class="empty-state">Cadastre um ativo antes de registrar movimentações.</div>{% else %}
+          <form method="post" action="/transactions" class="asset-form"><label>Ativo<select name="asset_id" required>{% for asset in assets %}<option value="{{ asset.id }}">{{ asset.symbol }} — {{ asset.name }}</option>{% endfor %}</select></label><label>Tipo<select name="transaction_type"><option value="buy">Compra</option><option value="sell">Venda</option></select></label><label>Quantidade<input name="quantity" type="number" step="0.000001" min="0.000001" required /></label><label>Preço unitário<input name="unit_price" type="number" step="0.01" min="0" required /></label><button type="submit">Registrar movimentação</button></form>{% endif %}
         </article>
-
-        <article class="panel">
-          <p class="eyebrow">HISTÓRICO</p>
-          <h2>Últimas movimentações</h2>
-          {% if transactions.len() == 0 %}
-            <div class="empty-state">Nenhuma movimentação registrada.</div>
-          {% else %}
-            <div class="table-wrap"><table>
-              <thead><tr><th>Ativo</th><th>Tipo</th><th>Qtd.</th><th>Preço</th><th>Data</th></tr></thead>
-              <tbody>{% for tx in transactions %}<tr><td><strong>{{ tx.symbol }}</strong></td><td>{{ tx.transaction_type }}</td><td>{{ tx.quantity }}</td><td>R$ {{ tx.unit_price }}</td><td>{{ tx.occurred_at }}</td></tr>{% endfor %}</tbody>
-            </table></div>
-          {% endif %}
-        </article>
+        <article class="panel"><p class="eyebrow">HISTÓRICO</p><h2>Últimas movimentações</h2>{% if transactions.len() == 0 %}<div class="empty-state">Nenhuma movimentação registrada.</div>{% else %}<div class="table-wrap"><table><thead><tr><th>Ativo</th><th>Tipo</th><th>Qtd.</th><th>Preço</th><th>Data</th></tr></thead><tbody>{% for tx in transactions %}<tr><td><strong>{{ tx.symbol }}</strong></td><td>{{ tx.transaction_type }}</td><td>{{ tx.quantity }}</td><td>R$ {{ tx.unit_price }}</td><td>{{ tx.occurred_at }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}</article>
       </section>
 
-      <section class="content-grid secondary" id="goals">
-        <article class="panel">
-          <p class="eyebrow">PRÓXIMA FASE</p>
-          <h2>Analytics e metas</h2>
-          <p class="sub">A v0.7.0 vai transformar os dados das movimentações em distribuição real, metas e indicadores.</p>
+      <section class="content-grid secondary" id="analytics">
+        <article class="panel"><p class="eyebrow">DISTRIBUIÇÃO</p><h2>Carteira por categoria</h2>
+          {% if allocations.len() == 0 %}<div class="empty-state">Adicione ativos para gerar a distribuição.</div>{% else %}
+          <div class="list">{% for item in allocations %}<div class="row"><div><div class="title">{{ item.asset_type }}</div><div class="meta">R$ {{ item.current_value }}</div></div><div><strong>{{ item.percent }}%</strong></div></div>{% endfor %}</div>{% endif %}
         </article>
-        <article class="panel">
-          <p class="eyebrow">REGRAS DO MOTOR</p>
-          <h2>Consistência financeira</h2>
-          <ul class="checklist"><li>Compra recalcula preço médio</li><li>Venda reduz quantidade sem alterar custo médio remanescente</li><li>Venda acima da posição é bloqueada</li><li>Movimentação e atualização do ativo ocorrem na mesma transação SQL</li></ul>
+
+        <article class="panel" id="goals"><p class="eyebrow">METAS DE ALOCAÇÃO</p><h2>Planejado x atual</h2>
+          <form method="post" action="/goals" class="asset-form"><label>Categoria<select name="asset_type"><option>Ações</option><option>FIIs</option><option>ETFs</option><option>Renda Fixa</option><option>Cripto</option><option>Outros</option></select></label><label>Meta (%)<input name="target_percent" type="number" min="0" max="100" step="0.01" required /></label><button type="submit">Salvar meta</button></form>
+          {% if goals.len() == 0 %}<div class="empty-state">Nenhuma meta cadastrada.</div>{% else %}<div class="list">{% for goal in goals %}<div class="row"><div><div class="title">{{ goal.asset_type }}</div><div class="meta">Atual {{ goal.current_percent }}% • Meta {{ goal.target_percent }}%</div></div><div class="{% if goal.difference > 0 %}positive{% else %}negative{% endif %}">{{ goal.difference }}%</div></div>{% endfor %}</div>{% endif %}
         </article>
       </section>
     </main>
