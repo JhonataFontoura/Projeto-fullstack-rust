@@ -1,132 +1,101 @@
 # FinTrack Rust
 
-FinTrack Rust é uma aplicação web fullstack para gestão inteligente de carteiras de investimentos. Permite cadastrar ativos e movimentações, acompanhar patrimônio, rentabilidade, distribuição e metas de alocação. Desenvolvida em Rust com Axum, PostgreSQL, SQLx, Askama, JWT e Docker, com foco em segurança e organização.
+![Rust](https://img.shields.io/badge/Rust-Backend-000000?logo=rust&logoColor=white)
+![Axum](https://img.shields.io/badge/Axum-Web-2563EB)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Ambiente-2496ED?logo=docker&logoColor=white)
 
-## Demonstração da aplicação web
+O **FinTrack Rust** é um projeto full stack que desenvolvi para colocar em prática meus estudos de Rust e construção de aplicações web. A proposta é reunir, em um só lugar, o cadastro e o acompanhamento de ativos de uma carteira de investimentos, com uma interface simples de utilizar e uma estrutura organizada no backend.
 
-O **FinTrack Rust** é uma aplicação Full Stack com backend em **Rust/Axum**, templates **Askama** e persistência em **PostgreSQL**. Diferentemente de um HTML estático, o projeto precisa do servidor e do banco de dados em execução para disponibilizar login, cadastro e dashboard.
+Neste projeto, trabalhei com autenticação de usuários, persistência de dados, operações de cadastro e atualização de ativos e cálculos de indicadores da carteira.
 
-**▶️ [Como executar e visualizar o FinTrack no navegador](#como-executar)**
+## Demonstração
 
-Após iniciar a aplicação localmente, acesse:
+![Demonstração do FinTrack Rust](./fintrack-demo.gif)
 
-- **Aplicação:** [http://127.0.0.1:3000](http://127.0.0.1:3000)
-- **Cadastro:** [http://127.0.0.1:3000/register](http://127.0.0.1:3000/register)
-- **Login:** [http://127.0.0.1:3000/login](http://127.0.0.1:3000/login)
-- **Health check:** [http://127.0.0.1:3000/health](http://127.0.0.1:3000/health)
+[▶ Assistir ao vídeo completo da aplicação (MP4)](./screen_1792636521859.mp4)
 
-### Demonstração animada do FinTrack
+## Funcionalidades
 
-A prévia abaixo será exibida automaticamente no README assim que o arquivo `fintrack-demo.gif` for enviado à raiz do repositório:
+- Cadastro de usuários e autenticação com sessões.
+- Login e logout.
+- Dashboard com resumo da carteira.
+- Cadastro, edição, listagem e exclusão de ativos.
+- Cálculo de valor investido, valor atual e resultado da carteira.
+- Armazenamento dos dados em PostgreSQL.
+- API para consulta dos ativos do usuário autenticado.
 
-![Demonstração animada do FinTrack Rust](./fintrack-demo.gif)
+## Tecnologias utilizadas
 
-**Vídeo completo (MP4):** [▶ Assistir ou baixar a gravação original](./screen_1792636521859.mp4)
+| Camada | Tecnologias |
+| --- | --- |
+| Backend | Rust, Axum, Tokio |
+| Banco de dados | PostgreSQL, SQLx |
+| Interface | HTML, CSS, Askama |
+| Autenticação | JWT, cookies, Argon2 |
+| Ambiente | Docker Compose, Cargo |
 
-> O MP4 já está publicado. O GIF foi gerado a partir da gravação e precisa ser enviado ao repositório com o nome `fintrack-demo.gif` para que a animação apareça acima.
-
-### O que explorar
-
-1. **Cadastro e autenticação:** crie uma conta e entre no sistema.
-2. **Dashboard:** acompanhe ativos e indicadores da carteira.
-3. **Gestão de ativos:** cadastre, edite e exclua registros.
-4. **Integração com banco de dados:** os dados são armazenados no PostgreSQL.
-
-> **Disponibilidade da demonstração:** o repositório não informa uma URL pública de deploy e não contém um vídeo de demonstração hospedado. Os links `127.0.0.1` funcionam **somente no computador em que o projeto estiver rodando**. Um visualizador de HTML estático não executa a aplicação Rust nem substitui o PostgreSQL. Para disponibilizar um botão “Testar online” para recrutadores, será necessário publicar a aplicação em uma hospedagem e configurar o banco de dados.
-
-## Visão do projeto
-
-O objetivo é evoluir do CRUD básico para uma experiência de portfólio mais completa, com regras financeiras, autenticação, histórico de movimentações, metas de alocação, testes e uma interface Futuristic Finance em preto, azul e dourado.
-
-## Tecnologias
-
-- Rust
-- Axum
-- Tokio
-- PostgreSQL
-- SQLx
-- Askama
-- JWT + cookies
-- Docker
-- HTML + CSS
-
-## Roadmap de evolução
-
-- v0.1.0 — Foundation: Cargo, Axum, health check e estrutura inicial.
-- v0.2.0 — Database: PostgreSQL, Docker, SQLx e migrations.
-- v0.3.0 — Assets Core: criação, listagem e atualização de ativos.
-- v0.4.0 — Authentication: usuários, JWT, cookies e rotas protegidas.
-- v0.5.0 — Portfolio Engine: compras, vendas, preço médio e patrimônio.
-- v0.6.0 — Futuristic Finance UI: dashboard Askama, preto + azul + dourado.
-- v0.7.0 — Portfolio Intelligence: rentabilidade, distribuição e metas.
-- v0.8.0 — Quality: validações, erros e testes.
-- v0.9.0 — Product Polish: UX, responsividade e documentação.
-- v1.0.0 — Release final do desafio.
-
-## Estrutura
+## Estrutura do projeto
 
 ```text
-src/
-├── main.rs
-├── config/
-├── models.rs
-├── services.rs
-├── routes/
-├── handlers/
-├── repositories/
-├── auth/
-└── errors/
-
-templates/
-static/
-migrations/
-tests/
-docker-compose.yml
-Cargo.toml
+Projeto-fullstack-rust/
+├── src/
+│   ├── main.rs
+│   ├── auth.rs
+│   ├── analytics.rs
+│   ├── config/
+│   ├── models.rs
+│   └── services.rs
+├── templates/
+│   ├── dashboard.html
+│   ├── login.html
+│   └── register.html
+├── static/
+├── migrations/
+├── docker-compose.yml
+├── Cargo.toml
+└── .env.example
 ```
 
-## Como executar
+## Como executar localmente
 
-1. Copie as variáveis de ambiente:
+É necessário ter **Rust**, **Cargo** e **Docker Desktop** instalados.
+
+Clone o repositório e entre na pasta:
+
+```bash
+git clone https://github.com/JhonataFontoura/Projeto-fullstack-rust.git
+cd Projeto-fullstack-rust
+```
+
+Crie o arquivo de configuração a partir do exemplo:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-2. Suba o PostgreSQL:
+Confira a conexão com o PostgreSQL no arquivo `.env` e inicie o banco:
 
-```powershell
+```bash
 docker compose up -d
 ```
 
-3. Execute a aplicação:
+Depois, execute a aplicação:
 
-```powershell
+```bash
 cargo run
 ```
 
-4. Abra:
+Com o servidor iniciado, acesse **http://127.0.0.1:3000** no navegador.
 
-```text
-http://127.0.0.1:3000
-```
+## Sobre o desenvolvimento
 
-## Testes
+O FinTrack foi uma oportunidade de aprofundar meu conhecimento em Rust além dos exercícios de terminal. Ao desenvolver a aplicação, pude trabalhar com rotas HTTP, autenticação, consultas ao banco de dados, renderização de páginas e organização das responsabilidades do código.
 
-```powershell
-cargo test
-```
+Também procurei construir uma interface visual consistente, com um dashboard que apresenta as informações financeiras de forma clara.
 
-## Melhorias implementadas
+O projeto continua sendo um espaço para aprimorar a arquitetura, as funcionalidades e a experiência de uso.
 
-- dashboard de portfólio;
-- cálculo de total investido, patrimônio e resultado;
-- categorias de ativos;
-- base para metas de alocação;
-- persistência em PostgreSQL;
-- interface responsiva com identidade visual Futuristic Finance;
-- validação de dados e tratamento de erros.
+---
 
-## Aprendizados
-
-O projeto exercita organização modular em Rust, Axum, SQLx, PostgreSQL, Docker, templates Askama, regras de negócio financeiras, serialização, tratamento de erros e desenvolvimento fullstack.
+**Desenvolvido por [Jhonata Fontoura](https://github.com/JhonataFontoura)** · Ciência da Computação
