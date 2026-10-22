@@ -17,15 +17,13 @@ Após iniciar a aplicação localmente, acesse:
 
 ### Vídeo de apresentação do FinTrack
 
-Gravação de aproximadamente **49 segundos**, preparada para demonstrar a aplicação web em funcionamento.
+Assista à gravação da aplicação web em funcionamento:
 
-**Arquivo da demonstração:** `media/fintrack-demo.mp4`
+[![▶ Assistir à demonstração do FinTrack Rust](https://img.shields.io/badge/%E2%96%B6%20Assistir-demonstra%C3%A7%C3%A3o%20em%20v%C3%ADdeo-2563EB?style=for-the-badge)](./screen_1792636521859.mp4)
 
-> **Publicação pendente:** o vídeo foi fornecido pelo autor, mas ainda precisa ser enviado para a pasta `media/` deste repositório. Assim que o arquivo estiver publicado, o link abaixo ficará disponível.
+**[▶ Abrir vídeo MP4 da demonstração](./screen_1792636521859.mp4)**
 
-[▶ Assistir à demonstração do FinTrack Rust](./media/fintrack-demo.mp4)
-
-Para publicar o vídeo, no GitHub abra este repositório, selecione **Add file → Upload files**, envie o MP4 com o nome `fintrack-demo.mp4` dentro da pasta `media` e confirme o commit na branch `main`. Não é necessário alterar o README novamente se o caminho e o nome forem mantidos.
+> O vídeo está publicado neste repositório. O GitHub abre o arquivo MP4 em sua página de visualização; o README exibe um botão/link para acessá-lo.
 
 ### O que explorar
 
