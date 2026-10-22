@@ -11,7 +11,9 @@ Neste projeto, trabalhei com autenticação de usuários, persistência de dados
 
 ## Demonstração
 
-![Demonstração do FinTrack Rust](./fintrack-demo.gif)
+[▶ Ver demonstração animada do FinTrack](./fintrack-demo.gif)
+
+_A prévia animada será exibida aqui após a substituição do arquivo GIF no repositório._
 
 [▶ Assistir ao vídeo completo da aplicação (MP4)](./screen_1792636521859.mp4)
 
