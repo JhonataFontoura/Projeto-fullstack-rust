@@ -15,6 +15,18 @@ Após iniciar a aplicação localmente, acesse:
 - **Login:** [http://127.0.0.1:3000/login](http://127.0.0.1:3000/login)
 - **Health check:** [http://127.0.0.1:3000/health](http://127.0.0.1:3000/health)
 
+### Vídeo de apresentação do FinTrack
+
+Gravação de aproximadamente **49 segundos**, preparada para demonstrar a aplicação web em funcionamento.
+
+**Arquivo da demonstração:** `media/fintrack-demo.mp4`
+
+> **Publicação pendente:** o vídeo foi fornecido pelo autor, mas ainda precisa ser enviado para a pasta `media/` deste repositório. Assim que o arquivo estiver publicado, o link abaixo ficará disponível.
+
+[▶ Assistir à demonstração do FinTrack Rust](./media/fintrack-demo.mp4)
+
+Para publicar o vídeo, no GitHub abra este repositório, selecione **Add file → Upload files**, envie o MP4 com o nome `fintrack-demo.mp4` dentro da pasta `media` e confirme o commit na branch `main`. Não é necessário alterar o README novamente se o caminho e o nome forem mantidos.
+
 ### O que explorar
 
 1. **Cadastro e autenticação:** crie uma conta e entre no sistema.
