@@ -2,6 +2,28 @@
 
 FinTrack Rust é uma aplicação web fullstack para gestão inteligente de carteiras de investimentos. Permite cadastrar ativos e movimentações, acompanhar patrimônio, rentabilidade, distribuição e metas de alocação. Desenvolvida em Rust com Axum, PostgreSQL, SQLx, Askama, JWT e Docker, com foco em segurança e organização.
 
+## Demonstração da aplicação web
+
+O **FinTrack Rust** é uma aplicação Full Stack com backend em **Rust/Axum**, templates **Askama** e persistência em **PostgreSQL**. Diferentemente de um HTML estático, o projeto precisa do servidor e do banco de dados em execução para disponibilizar login, cadastro e dashboard.
+
+**▶️ [Como executar e visualizar o FinTrack no navegador](#como-executar)**
+
+Após iniciar a aplicação localmente, acesse:
+
+- **Aplicação:** [http://127.0.0.1:3000](http://127.0.0.1:3000)
+- **Cadastro:** [http://127.0.0.1:3000/register](http://127.0.0.1:3000/register)
+- **Login:** [http://127.0.0.1:3000/login](http://127.0.0.1:3000/login)
+- **Health check:** [http://127.0.0.1:3000/health](http://127.0.0.1:3000/health)
+
+### O que explorar
+
+1. **Cadastro e autenticação:** crie uma conta e entre no sistema.
+2. **Dashboard:** acompanhe ativos e indicadores da carteira.
+3. **Gestão de ativos:** cadastre, edite e exclua registros.
+4. **Integração com banco de dados:** os dados são armazenados no PostgreSQL.
+
+> **Disponibilidade da demonstração:** o repositório não informa uma URL pública de deploy e não contém um vídeo de demonstração hospedado. Os links `127.0.0.1` funcionam **somente no computador em que o projeto estiver rodando**. Um visualizador de HTML estático não executa a aplicação Rust nem substitui o PostgreSQL. Para disponibilizar um botão “Testar online” para recrutadores, será necessário publicar a aplicação em uma hospedagem e configurar o banco de dados.
+
 ## Visão do projeto
 
 O objetivo é evoluir do CRUD básico para uma experiência de portfólio mais completa, com regras financeiras, autenticação, histórico de movimentações, metas de alocação, testes e uma interface Futuristic Finance em preto, azul e dourado.
