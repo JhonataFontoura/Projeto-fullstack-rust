@@ -15,15 +15,15 @@ Após iniciar a aplicação localmente, acesse:
 - **Login:** [http://127.0.0.1:3000/login](http://127.0.0.1:3000/login)
 - **Health check:** [http://127.0.0.1:3000/health](http://127.0.0.1:3000/health)
 
-### Vídeo de apresentação do FinTrack
+### Demonstração animada do FinTrack
 
-Assista à gravação da aplicação web em funcionamento:
+A prévia abaixo será exibida automaticamente no README assim que o arquivo `fintrack-demo.gif` for enviado à raiz do repositório:
 
-[![▶ Assistir à demonstração do FinTrack Rust](https://img.shields.io/badge/%E2%96%B6%20Assistir-demonstra%C3%A7%C3%A3o%20em%20v%C3%ADdeo-2563EB?style=for-the-badge)](./screen_1792636521859.mp4)
+![Demonstração animada do FinTrack Rust](./fintrack-demo.gif)
 
-**[▶ Abrir vídeo MP4 da demonstração](./screen_1792636521859.mp4)**
+**Vídeo completo (MP4):** [▶ Assistir ou baixar a gravação original](./screen_1792636521859.mp4)
 
-> O vídeo está publicado neste repositório. O GitHub abre o arquivo MP4 em sua página de visualização; o README exibe um botão/link para acessá-lo.
+> O MP4 já está publicado. O GIF foi gerado a partir da gravação e precisa ser enviado ao repositório com o nome `fintrack-demo.gif` para que a animação apareça acima.
 
 ### O que explorar
 
